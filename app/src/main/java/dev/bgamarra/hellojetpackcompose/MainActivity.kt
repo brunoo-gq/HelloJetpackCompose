@@ -38,9 +38,9 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelloComposeForm(){
-    var name by remember { mutableStateOf("") }
-    var birthDate by remember { mutableStateOf("") }
-
+    var talla by remember { mutableStateOf("") }
+    var peso by remember { mutableStateOf("") }
+    var imc by remember { mutableStateOf<Double?>(null) }
     Scaffold(
         topBar = {
             TopAppBar(title = {Text("Hola ESAN")})
@@ -51,24 +51,34 @@ fun HelloComposeForm(){
                 .padding(paddingValues = padding)
                 .padding(16.dp)
                 .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text("Bienvenido a JetPack Compose")
             OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text("Nombre") }
+                value = talla,
+                onValueChange = { talla = it },
+                label = { Text("Ingrese talla en cm") }
             )
             OutlinedTextField(
-                value = birthDate,
-                onValueChange = { birthDate = it },
-                label = { Text("Fecha de nacimiento")}
+                value = peso,
+                onValueChange = { peso = it },
+                label = { Text("Ingrese el peso en kg")}
             )
             Button(
-                onClick = {},
-                enabled = name.isNotEmpty() && birthDate.isNotEmpty()
+                onClick = {
+                    val tallam = talla.toDouble()/100
+                    val pesokg = peso.toDouble()
+
+                    imc = pesokg / (tallam * tallam)
+                },
+                enabled = talla.isNotEmpty() && peso.isNotEmpty()
             ) {
-                Text("Enviar")
+                Text("Calcular IMC")
+            }
+            if (imc != null) {
+                Text(
+                    text = "Tu IMC es: %.2f".format(imc)
+                )
             }
         }
     }
